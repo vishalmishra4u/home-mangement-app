@@ -21,7 +21,7 @@ function registerUserAction(req, res){
     .then(function (userAndProfile){
       var user = userAndProfile.user;
 
-      User.sendActivationMail(user);
+      // User.sendActivationMail(user);
       return res.success(user);
     })
     .catch(function (err) {

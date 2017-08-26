@@ -20,10 +20,6 @@ module.exports = {
       type: 'string',
       required: true
     },
-    about: {
-      type: 'string',
-      columnName: 'about'
-    },
     city: {
       type: 'string',
       columnName: 'city'
@@ -58,11 +54,35 @@ module.exports = {
     systemUniqueKey: {
       type: 'string',
       columnName: 'system_unique_key'
-    }
-  }
+    },
+    toApi : toApi
+  },
 
-  registerUser: registerUser
+  registerUser: registerUser,
+  loadUserByEmail : loadUserByEmail,
+  createNewUser : createNewUser,
+  generateSalt : generateSalt,
+  generateUuid : generateUuid,
+  generateEncryptedPassword : generateEncryptedPassword
 };
+
+function toApi() {
+  var user = this.toObject();
+  return {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email ? user.email : "",
+    isActive: user.isActive,
+    isDeleted: user.isDeleted,
+    isUpdatedProfile: user.isUpdatedProfile,
+    city: user.city,
+    state: user.state,
+    referenceId: user.referenceId,
+    systemUniqueKey: user.systemUniqueKey
+  };
+}
+
 
 function registerUser(userData) {
   return Q.promise(function (resolve, reject) {

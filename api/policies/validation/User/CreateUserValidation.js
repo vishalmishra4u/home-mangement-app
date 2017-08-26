@@ -9,7 +9,6 @@ module.exports = form(
   field('firstName'),
   field('lastName'),
   field('email'),
-  field('about'),
   field('city'),
   field('state'),
   field('password'),
