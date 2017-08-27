@@ -20,6 +20,8 @@
 module.exports.policies = {
 
   UserController : {
-    registerUser : ['validation/User/CreateUserValidation']
+    registerUser : ['validation/User/CreateUserValidation'],
+    login : ['validation/User/LoginValidation'],
+    updateUserProfile : ['IsUserAuthenticated','validation/User/updateProfileValidation']
   }
 };

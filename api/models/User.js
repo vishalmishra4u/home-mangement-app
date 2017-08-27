@@ -63,7 +63,9 @@ module.exports = {
   createNewUser : createNewUser,
   generateSalt : generateSalt,
   generateUuid : generateUuid,
-  generateEncryptedPassword : generateEncryptedPassword
+  generateEncryptedPassword : generateEncryptedPassword,
+  getForEmailPassword : getForEmailPassword,
+  updateData : updateData
 };
 
 function toApi() {
@@ -182,6 +184,84 @@ function loadUserByEmail(email) {
       })
       .catch(function (err) {
         sails.log.error('User#loadUserByEmail :: Error querying DB :: ', err);
+        return reject(err);
+      });
+  });
+}
+
+function getForEmailPassword(data) {
+  return Q.promise(function (resolve, reject) {
+    if (!data) {
+      sails.log.verbose('User#getForEmailPassword :: data null');
+      return reject({
+        code: 500,
+        message: 'INTERNAL_SERVER_ERROR'
+      });
+    }
+    User
+      .loadUserByEmail(data.email)
+      .then(function (user) {
+        if (!user) {
+          sails.log.info('User#getForEmailPassword :: No user available for the given email :: ', data.email);
+          return reject({
+            code: 404,
+            message: 'LOGIN_USER_NOT_FOUND'
+          });
+        }
+        var salt = user.salt;
+        generateEncryptedPassword(data.password, salt)
+          .then(function (hashedPassword) {
+            if (hashedPassword !== user.password) {
+              return reject({code: 401, message: 'LOGIN_USER_INVALID_CREDENTIALS'});
+            }
+            user.save(function () {});
+
+            return resolve(user);
+          });
+      })
+      .catch(function (err) {
+        sails.log.error('User#getForEmailPassword :: Error :: ', err);
+        return reject({
+          code: 500,
+          message: 'INTERNAL_SERVER_ERROR'
+        });
+      });
+  });
+}
+
+function updateData(userData) {
+  return Q.promise(function (resolve, reject) {
+    var email = userData.email;
+
+    User
+      .loadUserByEmail(email)
+      .then(function (user) {
+
+        if (!user) {
+          return reject({
+            code: 404,
+            message: "LOGIN_USER_NOT_FOUND"
+          });
+        }
+        user.firstName = userData.firstName;
+        user.lastName = userData.lastName;
+        user.city = userData.city;
+        user.state = userData.state;
+
+        var newUser = _.clone(user);
+
+        user.save(function (err) {
+          if (err) {
+            sails.log.error('User#updateData :: Error in saving to database ::', err);
+            return reject(err);
+          }
+          else {
+            return resolve(newUser);
+          }
+        });
+      })
+      .catch(function(err){
+        sails.log.error('User#updateData :: err :',err);
         return reject(err);
       });
   });
