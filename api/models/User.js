@@ -55,6 +55,9 @@ module.exports = {
       type: 'string',
       columnName: 'system_unique_key'
     },
+    home : {
+      model : 'home'
+    },
     toApi : toApi
   },
 
@@ -65,7 +68,8 @@ module.exports = {
   generateUuid : generateUuid,
   generateEncryptedPassword : generateEncryptedPassword,
   getForEmailPassword : getForEmailPassword,
-  updateData : updateData
+  updateData : updateData,
+  getUserForId : getUserForId
 };
 
 function toApi() {
@@ -243,10 +247,10 @@ function updateData(userData) {
             message: "LOGIN_USER_NOT_FOUND"
           });
         }
-        user.firstName = userData.firstName;
-        user.lastName = userData.lastName;
-        user.city = userData.city;
-        user.state = userData.state;
+        user.firstName = userData.firstName || user.firstName;
+        user.lastName = userData.lastName || user.lastName;
+        user.city = userData.city || user.city;
+        user.state = userData.state || user.state;
 
         var newUser = _.clone(user);
 
@@ -263,6 +267,35 @@ function updateData(userData) {
       .catch(function(err){
         sails.log.error('User#updateData :: err :',err);
         return reject(err);
+      });
+  });
+}
+
+function getUserForId(user) {
+  return Q.promise(function (resolve, reject) {
+    if (!user) {
+      sails.log.error('User#getUserForId :: User id is null ');
+      return reject({code: 400, message: 'USER_INVALID_REQUEST'});
+    }
+
+    var criteria = {
+      id: user,
+      isActive: true,
+      isDeleted: false
+    };
+    User
+      .findOne(criteria)
+      .then(function (user) {
+        if (!user) {
+          return reject({code: 404, message: 'USER_NOT_FOUND'});
+        } else {
+          return resolve(user);
+        }
+      })
+      .catch(function (err) {
+        sails.log.error('User#getUserForId :: Error in query :: ', err);
+
+        return reject({code: 500, message: 'INTERNAL_SERVER_ERROR'});
       });
   });
 }
