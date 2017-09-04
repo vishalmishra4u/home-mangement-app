@@ -71,7 +71,18 @@ module.exports = function(err) {
       break;
   }
 
-  return res[handler](payload);
+    var errorData = {
+      errorCode: code,
+      message: payload
+    }
+
+  var envelope = {
+    status: 'error',
+    error: errorData
+  };
+
+  return res.jsonx(envelope);
+//   return res[handler](payload);
 };
 
 /**
