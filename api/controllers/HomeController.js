@@ -16,13 +16,12 @@ function createHomeAction(req, res){
     return res.failed(validationErrors);
   }
   // create or find user in database and authenticate user
-  Home
-    .createHome(req.form)
+	var user = req.user;
+	Home
+    .createHome(req.form, user)
     .then(function (home){
-      var home = home.user;
 
-      // User.sendActivationMail(user);
-      return res.success(user);
+      return res.success(home);
     })
     .catch(function (err) {
       sails.log.error('HomeController#createHomeAction :: Error :: ', err);

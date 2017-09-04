@@ -23,5 +23,8 @@ module.exports.policies = {
     registerUser : ['validation/User/CreateUserValidation'],
     login : ['validation/User/LoginValidation'],
     updateUserProfile : ['IsUserAuthenticated','validation/User/updateProfileValidation']
+  },
+  HomeController : {
+    createHome : ['IsUserAuthenticated','validation/Home/CreateHomeValidation']
   }
 };
