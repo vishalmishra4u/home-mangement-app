@@ -6,7 +6,8 @@
  */
 
 module.exports = {
-	createHome : createHomeAction
+	createHome : createHomeAction,
+	updateHome : updateHomeAction
 };
 
 function createHomeAction(req, res){
@@ -25,6 +26,27 @@ function createHomeAction(req, res){
     })
     .catch(function (err) {
       sails.log.error('HomeController#createHomeAction :: Error :: ', err);
+      // check for the error code and accordingly send the response
+      return res.handleError(err);
+    });
+}
+
+function updateHomeAction(req, res){
+	if(!req.form.isValid) {
+    var validationErrors = ValidationService
+      .getValidationErrors(req.form.getErrors());
+    return res.failed(validationErrors);
+  }
+  // create or find user in database and authenticate user
+	var user = req.user;
+	Home
+    .updateHome(req.form, user)
+    .then(function (home){
+
+      return res.success(home);
+    })
+    .catch(function (err) {
+      sails.log.error('HomeController#updateHomeAction :: Error :: ', err);
       // check for the error code and accordingly send the response
       return res.handleError(err);
     });

@@ -28,9 +28,14 @@ module.exports = {
     createdBy : {
       model : 'User'
     },
+    isDeleted : {
+      type : boolean,
+      defaultsTo : false
+    }
     toApi : toApi
   },
-  createHome : createHome
+  createHome : createHome,
+  updateHome : updateHome
 };
 
 function toApi(){
@@ -75,6 +80,31 @@ function createHome(homeData, user){
       })
       .catch(function(error){
         sails.log.error('Home#createHome : error : ', error);
+        return reject(error);
+      });
+  });
+}
+
+function updateHome(homeData){
+  return Q.promise(function(resolve, reject){
+    Home
+      .findOne({
+        id : homeData.id,
+        isDeleted : false
+      })
+      .then(function(home){
+        home.address = homeData.address || home.address;
+        home.landmark = homeData.landmark || home.landmark;
+        home.city = homeData.city || home.city;
+        home.state = homeData.state || home.state;
+        home.pincode = homeData.pincode || home.pincode;
+
+        home.save();
+
+        return resolve(home);
+      })
+      .catch(function(error){
+        sails.log.error('Home#updateHome : error : ', error);
         return reject(error);
       });
   });
