@@ -26,5 +26,8 @@ module.exports.policies = {
   },
   HomeController : {
     createHome : ['IsUserAuthenticated','validation/Home/CreateHomeValidation']
+  },
+  EventController : {
+    createEvent : ['IsUserAuthenticated','validation/Home/CreateEventValidation']
   }
 };
