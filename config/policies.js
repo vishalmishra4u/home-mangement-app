@@ -22,12 +22,12 @@ module.exports.policies = {
   UserController : {
     registerUser : ['validation/User/CreateUserValidation'],
     login : ['validation/User/LoginValidation'],
-    updateUserProfile : ['IsUserAuthenticated','validation/User/updateProfileValidation']
+    updateUserProfile : ['IsUserAuthenticated','validation/User/UpdateProfileValidation']
   },
   HomeController : {
     createHome : ['IsUserAuthenticated','validation/Home/CreateHomeValidation']
   },
-  EventController : {
-    createEvent : ['IsUserAuthenticated','validation/Home/CreateEventValidation']
+  HomeEventController : {
+    createHomeEvent : ['IsUserAuthenticated','validation/Home/CreateHomeEventValidation']
   }
 };

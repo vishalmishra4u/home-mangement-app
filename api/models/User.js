@@ -58,6 +58,9 @@ module.exports = {
     home : {
       model : 'home'
     },
+    homeEvent : {
+      model : 'Event'
+    },
     toApi : toApi
   },
 

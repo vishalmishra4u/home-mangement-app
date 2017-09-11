@@ -8,7 +8,21 @@
 module.exports = {
 
   attributes: {
-
+    name : {
+      type : 'String'
+    },
+    assignedTo : {
+      collection : 'User',
+      via : 'homeEvent'
+    },
+    createdBy : {
+      model : 'User'
+    },
+    startDate : {
+      type : 'Date'
+    },
+    endDate : {
+      type : 'Date'
+    }
   }
 };
-
