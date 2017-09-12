@@ -59,7 +59,7 @@ module.exports = {
       model : 'home'
     },
     homeEvent : {
-      model : 'Event'
+      model : 'HomeEvent'
     },
     toApi : toApi
   },

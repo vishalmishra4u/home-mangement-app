@@ -15,8 +15,10 @@ function createEventAction(req, res){
       .getValidationErrors(req.form.getErrors());
     return res.failed(validationErrors);
   }
-	Event
-		.createHomeEvent(req.form)
+
+	var user = req.user;
+	HomeEvent
+		.createHomeEvent(req.form, user)
 		.then(function(event){
 
 			return res.succes(event);

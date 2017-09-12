@@ -1,9 +1,4 @@
-/**
- * Event.js
- *
- * @description :: TODO: You might write a short summary of how this model works and what it represents here.
- * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
- */
+var Q = require('q');
 
 module.exports = {
 
@@ -23,6 +18,29 @@ module.exports = {
     },
     endDate : {
       type : 'Date'
+    },
+    repeating : {
+      type : 'boolean'
+    },
+    frequencyRepeating : {
+      type : 'integer'
     }
-  }
+  },
+  createHomeEvent : createHomeEvent
 };
+
+function createHomeEvent(eventData, user){
+  return Q.promise(function(resolve, reject) {
+    eventData.createdBy = user.id;
+    HomeEvent
+      .create(eventData)
+      .then(function(homeEvent){
+
+        return resolve(homeEvent);
+      })
+      .catch(function(error){
+        sails.log.error('HomeEvent#createHomeEvent :: error :', error);
+        return reject(error);
+      });
+  });
+}

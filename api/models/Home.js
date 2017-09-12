@@ -29,9 +29,9 @@ module.exports = {
       model : 'User'
     },
     isDeleted : {
-      type : boolean,
+      type : 'boolean',
       defaultsTo : false
-    }
+    },
     toApi : toApi
   },
   createHome : createHome,
