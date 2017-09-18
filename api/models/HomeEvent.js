@@ -24,10 +24,15 @@ module.exports = {
     },
     frequencyRepeating : {
       type : 'integer'
+    },
+    isActive : {
+      type : 'boolean',
+      defaultsTo : true
     }
   },
   createHomeEvent : createHomeEvent,
-  updateHomeEvent : updateHomeEvent
+  updateHomeEvent : updateHomeEvent,
+  getHomeEvent : getHomeEvent
 };
 
 function createHomeEvent(eventData, user){
@@ -62,6 +67,30 @@ function updateHomeEvent(eventData){
       })
       .catch(function(error){
         sails.log.error('HomeEvent#createHomeEvent :: error :', error);
+        return reject(error);
+      });
+  });
+}
+
+function getHomeEvent(homeEventId){
+  return Q.promise(function(resolve, reject) {
+    HomeEvent
+      .findOne({
+        id : homeEventId,
+        isActive : true
+      })
+      .then(function(homeEvent){
+
+        if(!homeEvent){
+          return reject({
+            code: 404,
+            message : 'EVENT_NOT_FOUND'
+          });
+        }
+        return resolve(homeEvent);
+      })
+      .catch(function(error){
+        sails.log.error('HomeEvent#getHomeEvent :: error :', error);
         return reject(error);
       });
   });

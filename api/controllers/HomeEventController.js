@@ -7,7 +7,8 @@
 
 module.exports = {
 	createEvent : createEventAction,
-	updateEvent : updateEventAction
+	updateEvent : updateEventAction,
+	getHomeEvent : getHomeEventAction
 };
 
 function createEventAction(req, res){
@@ -39,6 +40,21 @@ function updateEventAction(req, res){
 
 	HomeEvent
 		.updateHomeEvent(req.form)
+		.then(function(event){
+
+			return res.succes(event);
+		})
+		.catch(function(error){
+			sails.log.error('HomeController#createHomeAction :: Error :: ', error);
+			return res.handleError(error);
+		});
+}
+
+function getHomeEventAction(req, res){
+	var homeEventId = req.param('homeEventId');
+
+	HomeEvent
+		.getHomeEvent(homeEventId)
 		.then(function(event){
 
 			return res.succes(event);

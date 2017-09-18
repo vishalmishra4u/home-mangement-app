@@ -6,5 +6,9 @@ module.exports.routes = {
   'PUT /api/v1/homeEvent/updateEvent' : {
     controller : 'EventController',
     action : 'updateEvent'
+  },
+  'GET /api/v1/homeEvent/getHomeEvent' : {
+    controller : 'EventController',
+    action : 'getHomeEvent'
   }
 };
